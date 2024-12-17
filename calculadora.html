@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Notas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input:invalid {
+            border-color: red;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .output {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+        .output strong {
+            font-size: 1.1em;
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calculadora de Notas</h1>
+        <!-- Entradas -->
+        <label for="tp1">TP1. Puntos de 20:</label>
+        <input type="number" id="tp1" value="20" min="0" max="20">
+
+        <label for="tp2">TP2. Puntos de 20:</label>
+        <input type="number" id="tp2" value="20" min="0" max="20">
+
+        <label for="tp3">TP3. Puntos de 20:</label>
+        <input type="number" id="tp3" value="20" min="0" max="20">
+
+        <label for="tp4">TP4. Puntos de 20:</label>
+        <input type="number" id="tp4" value="20" min="0" max="20">
+
+        <label for="exParcial1">Examen Parcial 1. Puntos de 30:</label>
+        <input type="number" id="exParcial1" value="30" min="0" max="30">
+
+        <label for="exParcial2">Examen Parcial 2. Puntos de 30:</label>
+        <input type="number" id="exParcial2" value="30" min="0" max="30">
+
+        <label for="exFinal">Examen Final. Puntos de 30:</label>
+        <input type="number" id="exFinal" value="30" min="0" max="30">
+
+        <!-- Botón de cálculo -->
+        <button onclick="calcularNotas()">Calcular</button>
+
+        <!-- Salidas -->
+        <div class="output" id="resultado"></div>
+    </div>
+
+    <script>
+        function calcularNotas() {
+            // Obtener valores de entrada
+            const tp1 = parseFloat(document.getElementById('tp1').value);
+            const tp2 = parseFloat(document.getElementById('tp2').value);
+            const tp3 = parseFloat(document.getElementById('tp3').value);
+            const tp4 = parseFloat(document.getElementById('tp4').value);
+            const exParcial1 = parseFloat(document.getElementById('exParcial1').value);
+            const exParcial2 = parseFloat(document.getElementById('exParcial2').value);
+            const exFinal = parseFloat(document.getElementById('exFinal').value);
+
+            // Validar entradas
+            if (
+                isNaN(tp1) || tp1 < 0 || tp1 > 20 ||
+                isNaN(tp2) || tp2 < 0 || tp2 > 20 ||
+                isNaN(tp3) || tp3 < 0 || tp3 > 20 ||
+                isNaN(tp4) || tp4 < 0 || tp4 > 20 ||
+                isNaN(exParcial1) || exParcial1 < 0 || exParcial1 > 30 ||
+                isNaN(exParcial2) || exParcial2 < 0 || exParcial2 > 30 ||
+                isNaN(exFinal) || exFinal < 0 || exFinal > 30
+            ) {
+                alert("Por favor, ingresa valores válidos dentro de los rangos especificados.");
+                return;
+            }
+
+            // Cálculos
+            const IParcial = ((((tp1 + tp2) / 2) + exParcial1) / 50)*100;
+            const IIParcial = ((((tp3 + tp4) / 2) + exParcial2) / 50)*100;
+            const promedioParciales = (IParcial + IIParcial) / 2;
+            const TParciales = promedioParciales * 0.6;
+
+            const examenFinalPorc = (exFinal / 30)*100;
+            const TFinal = examenFinalPorc * 0.4;
+
+            const notaFinal = TParciales + TFinal;
+
+            // Escala de notas
+            let escala;
+            if (notaFinal >= 91) {
+                escala = "5 Sobresaliente";
+            } else if (notaFinal >= 80) {
+                escala = "4 Distinguido";
+            } else if (notaFinal >= 70) {
+                escala = "3 Bueno";
+            } else if (notaFinal >= 60) {
+                escala = "2 Aprobado";
+            } else {
+                escala = "1 Aplazado";
+            }
+
+            // Mostrar resultados
+            document.getElementById('resultado').innerHTML = `
+                <p>I Parcial: ${IParcial.toFixed(2)}</p>
+                <p>II Parcial: ${IIParcial.toFixed(2)}</p>
+                <p>Promedio Parciales: ${promedioParciales.toFixed(2)}</p>
+                <p>T. Parciales: ${TParciales.toFixed(2)}</p>
+                <p>Examen Final%: ${examenFinalPorc.toFixed(2)}</p>
+                <p>T. Final: ${TFinal.toFixed(2)}</p>
+                <p><strong>Nota Final: ${notaFinal.toFixed(2)}</strong></p>
+                <p><strong>Escala: ${escala}</strong></p>
+            `;
+        }
+    </script>
+</body>
+</html>
